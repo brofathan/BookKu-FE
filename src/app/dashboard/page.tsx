@@ -1,3 +1,4 @@
+'use client'
 import BookCard, { Book } from '@/components/dashboard/BookCard';
 import UserCard, { User } from '@/components/dashboard/UserCard';
 import axios from 'axios'
