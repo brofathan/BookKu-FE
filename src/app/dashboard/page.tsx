@@ -1,32 +1,30 @@
-'use client'
 import BookCard, { Book } from '@/components/dashboard/BookCard';
 import UserCard, { User } from '@/components/dashboard/UserCard';
-import axios from 'axios'
 import React, { useEffect } from 'react'
 
 const getAllBooks = async () => {
-  const response = await axios.get("http://34.87.170.153/api/book")
+  const response = await fetch('http://34.87.170.153/api/book')
 
   if(!response.status){
     throw new Error();
   }
 
-  return response.data;
+  return response.json();
 }
 
-const getAllUsers = async () => {
-  const response = await axios.get("http://34.66.73.124/api/user")
+// const getAllUsers = async () => {
+//   const response = await axios.get("http://34.66.73.124/api/user")
 
-  if(!response.status){
-    throw new Error();
-  }
+//   if(!response.status){
+//     throw new Error();
+//   }
 
-  return response.data;
-}
+//   return response.data;
+// }
 
 export default async function page() {
   const books = await getAllBooks();
-  const users = await getAllUsers();
+  // const users = await getAllUsers();
   
   return (
     <>
@@ -42,16 +40,17 @@ export default async function page() {
           />
         ))}
       </div>
-      <div className='flex flex-col'>
-        {users.map((user: User) => (
-          <UserCard
-            key={user.id}
-            id={user.id}
-            nama={user.nama}
-            foto={user.foto}
-          />
-        ))}
-      </div>
     </>
   )
 }
+
+{/* <div className='flex flex-col'>
+{users.map((user: User) => (
+  <UserCard
+    key={user.id}
+    id={user.id}
+    nama={user.nama}
+    foto={user.foto}
+  />
+))}
+</div> */}
