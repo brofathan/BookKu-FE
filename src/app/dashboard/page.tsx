@@ -3,7 +3,9 @@ import UserCard, { User } from '@/components/dashboard/UserCard';
 import React, { useEffect } from 'react'
 
 const getAllBooks = async () => {
-  const response = await fetch('http://34.87.170.153/api/book')
+  const response = await fetch('http://34.87.170.153/api/book', {
+    cache: "no-store",
+  })
 
   if(!response.status){
     throw new Error();
