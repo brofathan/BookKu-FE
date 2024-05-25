@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.texture-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23d1d5db' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M20 0c11.046 0 20 8.954 20 20s-8.954 20-20 20S0 31.046 0 20 8.954 0 20 0zm0 3c9.94 0 17 7.992 17 17 0 9.94-7.992 17-17 17-9.94 0-17-7.992-17-17 0-9.94 7.992-17 17-17zM10 20c0-6.627 5.373-12 12-12s12 5.373 12 12-5.373 12-12 12-12-5.373-12-12zm2 0c0 5.514 4.486 10 10 10s10-4.486 10-10S27.514 10 22 10 12 14.486 12 20zm1 0c0-4.962 4.038-9 9-9s9 4.038 9 9-4.038 9-9 9-9-4.038-9-9zm1 0c0 4.418 3.582 8 8 8s8-3.582 8-8-3.582-8-8-8-8 3.582-8 8z' clip-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E");
+  }

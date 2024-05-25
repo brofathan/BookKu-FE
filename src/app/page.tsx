@@ -1,7 +1,11 @@
-export default function Home() {
+import React from 'react';
+
+const Home: React.FC = () => {
   return (
-    <main className="flex">
-      hello world
-    </main>
+    <div className="bg-gradient-to-b from-blue-500 to-blue-800 h-screen">
+      {/* Your page content */}
+    </div>
   );
-}
+};
+
+export default Home;
