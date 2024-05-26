@@ -49,18 +49,13 @@ const CartPage: NextPage = () => {
     const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
     const [discount, setDiscount] = useState(0);
     const [isCouponApplied, setIsCouponApplied] = useState(false);
-    const [formData, setFormData] = useState({
-        productName: '',
-        price: 0,
-        imageUrl: ''
-    });
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [userData, setUserData] = useState<{ cartId: number, historyId: number } | null>(null);
 
     const authHeaders = {
         'Content-Type': 'application/json',
         'X-API-KEY': 'KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd',
-        'Authorization': `${localStorage.getItem('accessToken')}`,
+        'Authorization': typeof window !== 'undefined' ? `${localStorage.getItem('accessToken')}` : '',
     };
 
     const fetchUserData = async () => {
@@ -73,19 +68,11 @@ const CartPage: NextPage = () => {
     };
 
     const fetchCartData = async (cartId: number) => {
+        console.log(userData)
+        console.log("^^^cek")
         try {
             const response = await axios.get<Cart>(`http://34.101.88.254/carts/${cartId}`, { headers: authHeaders });
-            if (!response.data) {
-                await axios.post('http://34.101.88.254/carts', {
-                    cartId: cartId,
-                    products: [],
-                    totalPrice: 0.0
-                }, { headers: authHeaders });
-                const newCartResponse = await axios.get<Cart>(`http://34.101.88.254/carts/${cartId}`, { headers: authHeaders });
-                setCart(newCartResponse.data);
-            } else {
-                setCart(response.data);
-            }
+            setCart(response.data);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching cart:', error);
@@ -189,28 +176,6 @@ const CartPage: NextPage = () => {
             updatePriceWithDiscount(updatedCart, selectedCoupon); // Update price with discount
         } catch (error) {
             console.error('Error deleting product:', error);
-        }
-    };
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleAddProduct = async () => {
-        try {
-            if (!userData) {
-                console.error('User data not available');
-                return;
-            }
-            await axios.post(`http://34.101.88.254/carts/${userData.cartId}/products`, { ...formData }, { headers: authHeaders });
-            const response = await axios.get<Cart>(`http://34.101.88.254/carts/${userData.cartId}`, { headers: authHeaders });
-            const totalPrice = response.data.products.reduce((total, product) => total + product.price, 0);
-            const updatedCart = { ...response.data, totalPrice };
-            setCart(updatedCart);
-            setFormData({ productName: '', price: 0, imageUrl: '' });
-            updatePriceWithDiscount(updatedCart, selectedCoupon); // Update price with discount
-        } catch (error) {
-            console.error('Error adding product:', error);
         }
     };
 
@@ -351,41 +316,6 @@ const CartPage: NextPage = () => {
                             )}
                         </>
                     )}
-                    <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
-                        <h2 className="text-xl font-semibold text-gray-900">Add Product (dummy for now)</h2>
-                        <div className="flex flex-col mt-4">
-                            <input
-                                type="text"
-                                placeholder="Product Name"
-                                className="border border-gray-300 rounded-md p-2 mb-2"
-                                name="productName"
-                                value={formData.productName}
-                                onChange={handleChange}
-                            />
-                            <input
-                                type="number"
-                                placeholder="Price"
-                                className="border border-gray-300 rounded-md p-2"
-                                name="price"
-                                value={formData.price.toString()}
-                                onChange={handleChange}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Image URL"
-                                className="border border-gray-300 rounded-md p-2"
-                                name="imageUrl"
-                                value={formData.imageUrl}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <button
-                            onClick={handleAddProduct}
-                            className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded mt-4 transition duration-300 ease-in-out transform hover:scale-105"
-                        >
-                            Add Product
-                        </button>
-                    </div>
                     <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
                         <h2 className="text-xl font-semibold text-gray-900">Available Coupons</h2>
                         <div className="relative">
