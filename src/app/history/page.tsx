@@ -83,7 +83,7 @@ const History: FC = () => {
                 <meta name="description" content="Your Checkout History" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="min-h-screen bg-gradient-to-r from-blue-100 to-blue-200 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
+            <div className="mt-20 min-h-screen bg-gradient-to-r from-blue-100 to-blue-200 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl w-full space-y-8">
                     <div className="flex items-center space-x-4 mb-8">
                         <FaHistory className="text-4xl text-blue-600 animate-bounce" />
