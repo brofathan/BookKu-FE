@@ -9,6 +9,7 @@ import Authservice from "../misc/Authservice";
 import { useRouter } from "next/navigation";
 
 const getAllBooks = async () => {
+
   const response = await fetch("http://34.87.170.153/book", {
     cache: "no-store",
   });
