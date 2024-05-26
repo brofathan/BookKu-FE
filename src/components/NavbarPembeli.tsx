@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-const Navbar: React.FC = () => {
+const NavbarPembeli: React.FC = () => {
     const [activeButton, setActiveButton] = useState('');
 
     const handleButtonClick = (buttonName: string, event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -20,12 +20,12 @@ const Navbar: React.FC = () => {
                 <a href="/" className="text-2xl font-bold font-poppins" onClick={handleBookKuClick}>BookKu</a>
             </div>
             <div className="flex items-center space-x-4" style={{ paddingRight: '20px' }}>
-                <a href="/" className={`text-lg font-medium ${activeButton === 'Login' ? 'bg-white rounded-full px-4 py-2 shadow-inner custom-inner-shadow' : ''}`} onClick={(e) => handleButtonClick('Login', e)}>Login</a>
-                <a href="/" className={`text-lg font-medium ${activeButton === 'Register' ? 'bg-white rounded-full px-4 py-2 shadow-inner custom-inner-shadow' : ''}`} onClick={(e) => handleButtonClick('Register', e)}>Register</a>
+                <a href="/" className={`text-lg font-medium ${activeButton === 'Cart' ? 'bg-white rounded-full px-4 py-2 shadow-inner custom-inner-shadow' : ''}`} onClick={(e) => handleButtonClick('Cart', e)}>Cart</a>
+                <a href="/" className={`text-lg font-medium ${activeButton === 'Histori' ? 'bg-white rounded-full px-4 py-2 shadow-inner custom-inner-shadow' : ''}`} onClick={(e) => handleButtonClick('Histori', e)}>Histori</a>
             </div>
         </div>
     );
 };
 
-export default Navbar;
+export default NavbarPembeli;
 
