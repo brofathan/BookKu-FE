@@ -20,7 +20,7 @@ const getAllBooks = async () => {
   return response.json();
 };
 
-export default function page() {
+export default function Dashboard() {
   const router = useRouter();
   const [isModal, setIsModal] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
@@ -42,10 +42,11 @@ export default function page() {
   const [kategori, setKategori] = useState("");
 
   // AUTHORIZATION //
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // useEffect(() => {
-  //   fetchData();
+  //   fetchBookData();
+  //   fetchAccountData();
   // }, []);
 
   const fetchBookData = async () => {
@@ -62,35 +63,39 @@ export default function page() {
     setUserData(data);
   };
 
-  // useEffect(() => {
-  //   const authorizeUser = async () => {
-  //     try {
-  //       await Authservice.authorize("admin");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const authorizeUser = async () => {
+      try {
+        await Authservice.authorize("admin");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   authorizeUser();
-  // }, []);
+    fetchBookData();
+    fetchAccountData();
 
-  // if (loading) {
-  //   return (
-  //     <div className="loading-container">
-  //       <div className="spinner"></div>
-  //     </div>
-  //   );
-  // }
+    authorizeUser();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
   // AUTHORIZATION //
+
   const refresh = () => {
     fetchBookData();
     fetchAccountData();
   };
 
-  useEffect(() => {
-    fetchBookData();
-    fetchAccountData();
-  }, []);
+  // useEffect(() => {
+  //   fetchBookData();
+  //   fetchAccountData();
+  // }, []);
 
   const handleModal = (id: string) => {
     getBook(id);
