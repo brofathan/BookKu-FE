@@ -139,7 +139,8 @@ const CartPage: NextPage = () => {
             const productData: Array<object> = cart.products.map(product => ({
                 productName: product.productName,
                 price: product.price,
-                imageUrl: product.imageUrl
+                imageUrl: product.imageUrl,
+                tokenBuku: product.tokenBuku
             }));
 
             await axios.post(`http://34.101.88.254/histories/${userData.historyId}/add-cart`, {
