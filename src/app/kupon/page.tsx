@@ -17,6 +17,7 @@ interface Kupon {
 }
 
 const DaftarKupon: React.FC = () => {
+    
     const [kupons, setKupons] = useState<Kupon[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
