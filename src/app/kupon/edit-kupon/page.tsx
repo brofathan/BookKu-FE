@@ -6,7 +6,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const BuatKupon = () => {
+const EditKupon = () => {
     const [formData, setFormData] = useState({
         nama: '',
         jenisKupon:'',
@@ -76,15 +76,11 @@ const BuatKupon = () => {
     return (
         <div className="mt-20">
             <div className="p-20">
-           <div className="flex items-center justify-between mb-4"> {/* Updated flex container */}
-                <a href = "/kupon">
+            <a href = "/kupon">
                     <button className="bg-blue-800 text-white rounded-full p-2 shadow mr-4">
                         <FiArrowLeft className="h-8 w-8" />
                     </button>
                     </a>
-                <h1 className="text-4xl font-poppins font-bold mb-2 mr-auto">Buat Kupon</h1>
-            </div>
-
                 <form onSubmit={handleSubmit} className="bg-gray-100 bg-opacity-30 backdrop-blur-md backdrop-filter backdrop-blur-md shadow rounded-3xl px-8 pt-6 pb-8 mb-4">
                     <div>
                         <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -192,11 +188,11 @@ const BuatKupon = () => {
                             />
                         </div>
                     </div>
-                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-4 w-full">Submit</button>
+                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-4 w-full">Edit</button>
                 </form>
             </div>
         </div>
     );
 };
 
-export default BuatKupon;
+export default EditKupon;

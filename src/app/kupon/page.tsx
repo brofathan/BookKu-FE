@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 interface Kupon {
     id: string;
@@ -13,14 +14,13 @@ interface Kupon {
     tangalMulai: string;
     tanggalSelesai: string;
     statusKupon: boolean;
-    valid: boolean;
 }
 
 const DaftarKupon: React.FC = () => {
-    const user = "John";
     const [kupons, setKupons] = useState<Kupon[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
+    const router = useRouter();
 
     useEffect(() => {
         const fetchKupons = async () => {
@@ -72,13 +72,42 @@ const DaftarKupon: React.FC = () => {
         setCurrentPage(pageNumber);
     };
 
-    console.log('Current items:', currentItems); // Debug log to check current items
+    const handleDeleteClick = (kupon: Kupon) => {
+        if (kupon.statusKupon) {
+            alert("Kupon diskon masih aktif, silahkan perbarui status kupon menjadi tidak aktif untuk menghapus kupon");
+        } else {
+            const confirmDelete = window.confirm("Apakah anda yakin untuk menghapus kupon?");
+            if (confirmDelete) {
+                deleteKupon(kupon.id);
+            }
+        }
+    };
+
+    const handleEditClick = (id: string) => {
+        router.push(`/kupon/edit-kupon?id=${id}`);
+    };
+
+    const deleteKupon = async (kuponId: string) => {
+        try {
+            await fetch(`http://34.87.61.85/delete-kupon/${kuponId}`, {
+                method: 'POST',
+            });
+            setKupons(prevKupons => prevKupons.filter(kupon => kupon.id !== kuponId));
+            alert("Kupon berhasil dihapus");
+        } catch (error) {
+            console.error('Error deleting kupon:', error);
+            alert("Terjadi kesalahan saat menghapus kupon");
+        }
+    };
 
     return (
         <div className="p-20">
-            <div className="flex items-center justify-starts mb-4"> {/* Added flex container */}
+            <div className="flex items-center justify-starts mb-4">
                 <h1 className="text-4xl font-poppins font-bold mb-2">Semua Kupon</h1>
-                <button className="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg ml-4"> {/* Added shadow to button */}
+                <button
+                    onClick={() => router.push('/kupon/buat-kupon')}
+                    className="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg ml-4"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
@@ -86,8 +115,11 @@ const DaftarKupon: React.FC = () => {
             </div>
             <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {currentItems.map((kupon, index) => (
-                    <div key={index} className="bg-white p-6 rounded-3xl shadow relative"> {/* Modified rounded class */}
-                        <button className="bg-red-500 text font-bold font-poppins text-white py-2 px-4 rounded-full absolute top-6 right-6">
+                    <div key={index} className="bg-white p-6 rounded-3xl shadow relative">
+                        <button
+                            className="bg-red-500 text font-bold font-poppins text-white py-2 px-4 rounded-full absolute top-6 right-6"
+                            onClick={() => handleDeleteClick(kupon)}
+                        >
                             Hapus
                         </button>
                         <h2 className="text-2xl font-poppins font-bold mb-2">{kupon.nama}</h2>
@@ -99,9 +131,11 @@ const DaftarKupon: React.FC = () => {
                         <p className="text-gray-700">Harga Maksimum: {kupon.hargaMaksimum}</p>
                         <p className="text-gray-700">Tanggal Mulai: {kupon.tangalMulai}</p>
                         <p className="text-gray-700">Tanggal Selesai: {kupon.tanggalSelesai}</p>
-                        <p className="text-gray-700">Status Kupon: {kupon.statusKupon ? 'Active' : 'Inactive'}</p>
-                        <p className="text-gray-700">Valid: {kupon.valid ? 'Yes' : 'No'}</p>
-                        <button className="bg-blue-500 font-bold font-poppins text-white py-2 px-4 rounded-full mt-2 w-full">
+                        <p className="text-gray-700">Status Kupon: {kupon.statusKupon ? 'Aktif' : 'Tidak aktif'}</p>
+                        <button
+                            onClick={() => handleEditClick(kupon.id)}
+                            className="bg-blue-500 font-bold font-poppins text-white py-2 px-4 rounded-full mt-2 w-full"
+                        >
                             Ubah Kupon
                         </button>
                     </div>
@@ -113,7 +147,7 @@ const DaftarKupon: React.FC = () => {
                     <button
                         key={index}
                         onClick={() => handleClick(index + 1)}
-                        className={`mx-1 px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-gray-200 text-gray-700'}`}
+                        className={`mx-1 px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-gray-200 text-gray-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     >
                         {index + 1}
                     </button>
