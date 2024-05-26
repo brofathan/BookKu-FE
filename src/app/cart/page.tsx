@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { FaShoppingCart } from 'react-icons/fa';
 import { AiFillDelete } from 'react-icons/ai';
 import { NextPage } from 'next';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 interface Product {
     productId: number;
@@ -254,14 +255,16 @@ const CartPage: NextPage = () => {
                 <meta name="description" content="Your Shopping Cart" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-gradient-to-r from-blue-100 to-blue-200 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-3xl w-full space-y-8">
                     <div className="flex items-center space-x-4">
-                        <FaShoppingCart className="text-4xl text-blue-600" />
+                        <FaShoppingCart className="text-4xl text-blue-600 animate-bounce" />
                         <h1 className="text-3xl font-extrabold text-gray-900">Shopping Cart</h1>
                     </div>
                     {loading ? (
-                        <p className="text-lg text-gray-700">Loading...</p>
+                        <div className="flex justify-center items-center h-40">
+                            <ClipLoader color="#1E40AF" size={50} />
+                        </div>
                     ) : (
                         <>
                             {cart === null || !cart.products.length ? (
@@ -284,15 +287,15 @@ const CartPage: NextPage = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => handleDeleteProduct(product.productId)}
-                                                    className="text-red-600 hover:text-red-800"
+                                                    className="text-red-600 hover:text-red-800 transition duration-300 ease-in-out transform hover:scale-105"
                                                 >
                                                     <AiFillDelete className="text-2xl" />
                                                 </button>
                                             </li>
                                         ))}
                                     </ul>
-                                    <div className="mt-8 flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
-                                        <div>
+                                    <div className="mt-8 flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-lg shadow-md">
+                                        <div className="flex flex-col space-y-2">
                                             <p className="text-2xl font-semibold text-gray-900">Total Price: {formatRupiah(cart.totalPrice)}</p>
                                             {isCouponApplied && ( // Display the discount only if a coupon is applied
                                                 <div className="flex items-center space-x-4">
@@ -308,7 +311,7 @@ const CartPage: NextPage = () => {
                                         </div>
                                         <button
                                             onClick={handleCheckout}
-                                            className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded transition duration-300 ease-in-out transform hover:scale-105"
+                                            className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded mt-4 sm:mt-0 transition duration-300 ease-in-out transform hover:scale-105"
                                         >
                                             Checkout
                                         </button>
@@ -322,12 +325,12 @@ const CartPage: NextPage = () => {
                         <div className="relative">
                             <button
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                                className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105"
+                                className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mt-2 transition duration-300 ease-in-out transform hover:scale-105"
                             >
                                 {dropdownOpen ? 'Hide Coupons' : 'Show Coupons'}
                             </button>
                             {dropdownOpen && (
-                                <ul className="absolute mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg divide-y divide-gray-200 z-10">
+                                <ul className="absolute mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg divide-y divide-gray-200 z-10 animate-fadeIn">
                                     {coupons.length > 0 ? (
                                         coupons.map((coupon) => (
                                             <li key={coupon.id}
@@ -345,6 +348,19 @@ const CartPage: NextPage = () => {
                     </div>
                 </div>
             </div>
+            <style jsx global>{`
+                .animate-fadeIn {
+                    animation: fadeIn 0.5s ease-in-out;
+                }
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+            `}</style>
         </>
     );
 };
