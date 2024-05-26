@@ -9,7 +9,6 @@ import Authservice from "../misc/Authservice";
 import { useRouter } from "next/navigation";
 
 const getAllBooks = async () => {
-
   const response = await fetch("http://34.87.170.153/book", {
     cache: "no-store",
   });
@@ -43,7 +42,7 @@ export default function page() {
   const [kategori, setKategori] = useState("");
 
   // AUTHORIZATION //
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   // useEffect(() => {
   //   fetchData();
@@ -63,33 +62,35 @@ export default function page() {
     setUserData(data);
   };
 
-  useEffect(() => {
-    const authorizeUser = async () => {
-      try {
-        await Authservice.authorize("admin");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const authorizeUser = async () => {
+  //     try {
+  //       await Authservice.authorize("admin");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    authorizeUser();
+  //   authorizeUser();
+  // }, []);
 
-    fetchBookData();
-    fetchAccountData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="loading-container">
+  //       <div className="spinner"></div>
+  //     </div>
+  //   );
+  // }
   // AUTHORIZATION //
   const refresh = () => {
     fetchBookData();
     fetchAccountData();
   };
+
+  useEffect(() => {
+    fetchBookData();
+    fetchAccountData();
+  }, []);
 
   const handleModal = (id: string) => {
     getBook(id);
