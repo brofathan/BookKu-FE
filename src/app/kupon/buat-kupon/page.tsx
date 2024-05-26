@@ -16,7 +16,7 @@ const BuatKupon = () => {
         potonganHarga: '0',
         hargaMinimum: 0,
         hargaMaksimum: 0,
-        tanggalMulai: new Date(),
+        tangalMulai: new Date(),
         tanggalSelesai: new Date(),
         statusKupon: false,
     });
@@ -45,7 +45,7 @@ const BuatKupon = () => {
     const handleStartDateChange = (date: Date) => {
         setFormData({
             ...formData,
-            tanggalMulai: date
+            tangalMulai: date
         });
     };
 
@@ -215,7 +215,7 @@ const BuatKupon = () => {
                         <div>
                             <label className="block text-gray-700 text-sm font-bold mb-2">Tanggal Mulai:</label>
                             <DatePicker
-                                selected={formData.tanggalMulai}
+                                selected={formData.tangalMulai}
                                 onChange={handleStartDateChange}
                                 dateFormat="dd/MM/yyyy"
                                 className="custom-inner-shadow-input appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-3xl mt-2"
