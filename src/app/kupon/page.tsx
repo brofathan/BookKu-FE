@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface Kupon {
     id: string;
@@ -30,7 +30,6 @@ const DaftarKupon: React.FC = () => {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                console.log('Fetched kupons:', data); // Debug log to check data structure
                 const modifiedKupons = data.map((kupon: Kupon) => {
                     let modifiedJenis = "";
                     if (kupon.jenisKupon.includes("D")) {
@@ -62,7 +61,6 @@ const DaftarKupon: React.FC = () => {
         fetchKupons();
     }, []);
 
-    // Pagination logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = kupons.slice(indexOfFirstItem, indexOfLastItem);
@@ -102,7 +100,7 @@ const DaftarKupon: React.FC = () => {
 
     return (
         <div className="p-20">
-            <div className="flex items-center justify-starts mb-4">
+            <div className="flex items-center justify-start mb-4">
                 <h1 className="text-4xl font-poppins font-bold mb-2">Semua Kupon</h1>
                 <button
                     onClick={() => router.push('/kupon/buat-kupon')}
@@ -141,7 +139,6 @@ const DaftarKupon: React.FC = () => {
                     </div>
                 ))}
             </div>
-
             <div className="flex justify-center mt-8">
                 {Array.from({ length: totalPages }, (_, index) => (
                     <button
