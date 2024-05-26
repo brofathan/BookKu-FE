@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import NavbarPembeli from '../components/NavbarPembeli'; 
+
 import Navbar from '../components/Navbar';
-import NavbarAdmin from '../components/NavbarAdmin'; 
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,19 +20,12 @@ export default function RootLayout({
 
   const situasi = "pembeli"; 
   
-  let navbarComponent
-  if (situasi === 'pembeli') {
-    navbarComponent = <NavbarPembeli />;
-  } else if (situasi === 'sebelum') {
-    navbarComponent = <Navbar />;
-  } else if (situasi === 'admin') {
-    navbarComponent = <NavbarAdmin />;
-  }
+
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        {navbarComponent}
+        <Navbar/>
         <div className="mt-20">{children}</div> 
       </body>
     </html>

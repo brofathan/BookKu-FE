@@ -19,7 +19,7 @@ interface Book {
 }
 
 const BookList: React.FC = () => {
-  const user = "John";
+  const user = "Pengguna";
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,10 +28,11 @@ const BookList: React.FC = () => {
     async function fetchBooks() {
       try {
         const response = await axios.get<{ data: Book[] }>('http://34.87.170.153/book');
-        setBooks(response.data.data.slice(0, 10)); // Get only the first 10 books
+        const sortedBooks = response.data.data.sort((a, b) => b.buy_count - a.buy_count).slice(0, 10);
+        setBooks(sortedBooks);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching books:', error); // Print the error to the console
+        console.error('Error fetching books:', error);
         setError('Error fetching books');
         setLoading(false);
       }
@@ -75,6 +76,7 @@ const BookList: React.FC = () => {
                 <p className="text-gray-700 mb-2">Penulis: {book.penulis}</p>
                 <p className="text-gray-700 mb-2">Harga: Rp{book.harga}</p>       
                 <p className="text-gray-700 mb-2">Kategori: {book.kategori}</p>
+                <p className="text-gray-700 mb-2">Terjual: {book.buy_count}</p>
               </div>
               </a>
             </div>
