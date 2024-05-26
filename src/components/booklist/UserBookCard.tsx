@@ -13,7 +13,7 @@ export default function BookCard(book: Book) {
   return (
     <div className='m-8'>
       <div>
-        Image
+        <img src={book.foto_cover} alt={book.judul} />
       </div>
       <div>
         <div className='text-xl'>{book.judul}</div>
