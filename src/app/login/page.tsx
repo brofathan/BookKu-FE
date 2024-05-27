@@ -4,8 +4,6 @@ import Popup from "../misc/popup";
 
 const Login: React.FC = () => {
   if (typeof window !== "undefined") {
-    // now access your localStorage
-
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
   }
