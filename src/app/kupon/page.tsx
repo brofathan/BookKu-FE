@@ -66,7 +66,7 @@ const DaftarKupon: React.FC = () => {
     const deleteKupon = async (kuponId: string) => {
         try {
             await fetch(`http://34.87.61.85/delete-kupon/${kuponId}`, {
-                method: 'POST',
+                method: 'DELETE',
             });
             setKupons(prevKupons => prevKupons.filter(kupon => kupon.id !== kuponId));
             alert("Kupon berhasil dihapus");
