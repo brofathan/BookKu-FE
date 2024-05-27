@@ -8,10 +8,14 @@ import { useSearchParams } from 'next/navigation'
 
 import "react-datepicker/dist/react-datepicker.css";
 
+export const dynamic = 'force-dynamic'
+
+
 const EditKupon: React.FC = () => {
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
     const router = useRouter();
+    <>Search: {id}</>
 
     const [formData, setFormData] = useState({
         nama: '',
