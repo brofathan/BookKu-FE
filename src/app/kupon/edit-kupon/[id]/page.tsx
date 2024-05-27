@@ -3,23 +3,18 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from "react-datepicker";
 import { FiArrowLeft } from 'react-icons/fi'; 
 import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation'
-
 
 import "react-datepicker/dist/react-datepicker.css";
 
-export const dynamic = 'force-dynamic'
-
+export const dynamic = 'force-dynamic';
 
 const EditKupon: React.FC = () => {
-    const searchParams = useSearchParams();
-    const id = searchParams.get('id');
+    const id = window.location.pathname.split('/').pop();
     const router = useRouter();
-    <>Search: {id}</>
 
     const [formData, setFormData] = useState({
         nama: '',
-        jenisKupon:'',
+        jenisKupon: '',
         kode: '',
         persentase: 0,
         potonganHarga: '0',
@@ -68,7 +63,7 @@ const EditKupon: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://34.87.61.85/update-kupon/${id}`, {
+            const response = await fetch(`http://34.87.61.85/edit-kupon/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,11 +105,13 @@ const EditKupon: React.FC = () => {
         if (!id) return;
         const fetchKupon = async () => {
             try {
+                const id = window.location.pathname.split('/').pop();
                 const response = await fetch(`http://34.87.61.85/kupon/${id}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
+                // Update the initial state with the fetched data
                 setFormData(data);
                 setCheckboxState({
                     hargaMinimum: data.hargaMinimum > 0,
@@ -130,14 +127,12 @@ const EditKupon: React.FC = () => {
     return (
         <div className="mt-20">
             <div className="p-20">
-            <div className="flex items-center justify-between mb-4"> {/* Updated flex container */}
-                <a href = "/kupon">
-                    <button className="bg-blue-800 text-white rounded-full p-2 shadow mr-4">
-                        <FiArrowLeft className="h-8 w-8" />
-                    </button>
-                    </a>
-                <h1 className="text-4xl font-poppins font-bold mb-2 mr-auto">Buat Kupon</h1>
-            </div>
+                <div className="flex items-center justify-between mb-4">
+                <button onClick={() => router.back()} className="bg-blue-800 text-white rounded-full p-2 shadow mr-4">
+                    <FiArrowLeft className="h-8 w-8" />
+                </button>
+                    <h1 className="text-4xl font-poppins font-bold mb-2 mr-auto">Edit Kupon</h1>
+                </div>
 
                 <form onSubmit={handleSubmit} className="bg-gray-100 bg-opacity-30 backdrop-blur-md shadow rounded-3xl px-8 pt-6 pb-8 mb-4">
                     <div>
