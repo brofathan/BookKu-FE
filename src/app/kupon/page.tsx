@@ -17,7 +17,6 @@ interface Kupon {
 }
 
 const DaftarKupon: React.FC = () => {
-    
     const [kupons, setKupons] = useState<Kupon[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
@@ -31,29 +30,7 @@ const DaftarKupon: React.FC = () => {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                const modifiedKupons = data.map((kupon: Kupon) => {
-                    let modifiedJenis = "";
-                    if (kupon.jenisKupon.includes("D")) {
-                        modifiedJenis += "Diskon";
-                    }
-                    if (kupon.jenisKupon.includes("P")) {
-                        modifiedJenis += " persentase";
-                    }
-                    if (kupon.jenisKupon.includes("H")) {
-                        modifiedJenis += " harga";
-                    }
-                    if (kupon.jenisKupon.includes("MIN")) {
-                        modifiedJenis += " dengan minimum";
-                    }
-                    if (kupon.jenisKupon.includes("MAKS")) {
-                        modifiedJenis += " dengan maksimum";
-                    }
-                    return {
-                        ...kupon,
-                        jenisKupon: modifiedJenis,
-                    };
-                });
-                setKupons(modifiedKupons);
+                setKupons(data);
             } catch (error) {
                 console.error('Error fetching kupons:', error);
             }
@@ -83,7 +60,7 @@ const DaftarKupon: React.FC = () => {
     };
 
     const handleEditClick = (id: string) => {
-        router.push(`/kupon/edit-kupon?id=${id}`);
+        router.push(`/kupon/edit-kupon/${id}`);
     };
 
     const deleteKupon = async (kuponId: string) => {
