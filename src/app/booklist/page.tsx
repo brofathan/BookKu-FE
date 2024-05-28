@@ -1,7 +1,10 @@
 'use client';
 
+// import Authservice from '../misc/Authservice';
+// import '../misc/loading.css';
 import React, { useEffect, useState } from 'react';
 import UserBookCard, { Book } from '@/components/booklist/UserBookCard';
+import { FaFilter } from 'react-icons/fa'; // Mengimpor ikon filter dari react-icons
 
 const getAllBooks = async (keyword = '', filterBy = '', sortBy = '', sortDir = '') => {
   const response = await fetch(`http://34.87.170.153/book/list?keyword=${keyword}&filter-by=${filterBy}&sort-by=${sortBy}&sort-dir=${sortDir}`, {
@@ -31,6 +34,7 @@ const Page = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showFilter, setShowFilter] = useState(false); // State untuk mengatur tampilan filter
   const [searchParams, setSearchParams] = useState({
     keyword: '',
     filterBy: '',
@@ -84,8 +88,8 @@ const Page = () => {
 
   // Render komponen Page
   return (
-    <div className='flex flex-col'>
-      <form onSubmit={handleSubmit} className='mb-4'>
+    <div className='flex flex-col p-20'>
+      <form onSubmit={handleSubmit} className='mb-4 flex items-center w-full'>
         {/* Input pencarian */}
         <input 
           type='text' 
@@ -93,60 +97,72 @@ const Page = () => {
           value={searchParams.keyword} 
           onChange={handleChange} 
           placeholder='Search for books' 
-          className='border p-2 rounded'
+          className='border p-2 rounded-l-md h-10 flex-grow'
         />
-
-        {/* Filter by */}
-        <label className='mr-2'>Filter by:</label>
-        <select 
-          name='filterBy' 
-          value={searchParams.filterBy} 
-          onChange={handleChange} 
-          className='border p-2 rounded'
+        {/* Tombol filter */}
+        <button 
+          type='button' 
+          onClick={() => setShowFilter(!showFilter)} 
+          className='p-2 bg-gray-200 border-l h-10 flex items-center justify-center rounded-r-md'
         >
-          <option value=''>None</option>
-          <option value='judul'>Judul</option>
-          <option value='penulis'>Penulis</option>
-        </select>
-
-        <button type='submit' className='ml-2 p-2 bg-blue-500 text-white rounded'>Search</button>
+          <FaFilter />
+        </button>
+        <button type='submit' className='ml-2 p-2 bg-blue-500 text-white rounded h-10'>Search</button>
       </form>
-      
-      {/* Sort by */}
-      <div className='mb-4'>
-        <label className='mr-2'>Sort by:</label>
-        <select 
-          name='sortBy' 
-          value={searchParams.sortBy} 
-          onChange={handleChange} 
-          className='border p-2 rounded'
-        >
-          <option value='tanggal_terbit'>Tanggal Terbit</option>
-          <option value='buy_count'>Popularitas</option>
-          <option value='harga'>Harga</option>
-        </select>
-        <select 
-          name='sortDir' 
-          value={searchParams.sortDir} 
-          onChange={handleChange} 
-          className='ml-2 border p-2 rounded'
-        >
-          <option value='asc'>Ascending</option>
-          <option value='desc'>Descending</option>
-        </select>
+
+      {/* Menampilkan filter jika showFilter bernilai true */}
+      {showFilter && (
+        <div className='mb-4'>
+          <label className='mr-2'>Filter by:</label>
+          <select 
+            name='filterBy' 
+            value={searchParams.filterBy} 
+            onChange={handleChange} 
+            className='border p-2 rounded-md'
+          >
+            <option value=''>None</option>
+            <option value='judul'>Judul</option>
+            <option value='penulis'>Penulis</option>
+          </select>
+
+          <div className='mt-4'>
+            <label className='mr-2'>Sort by:</label>
+            <select 
+              name='sortBy' 
+              value={searchParams.sortBy} 
+              onChange={handleChange} 
+              className='border p-2 rounded-md'
+            >
+              <option value='tanggal_terbit'>Tanggal Terbit</option>
+              <option value='buy_count'>Popularitas</option>
+              <option value='harga'>Harga</option>
+            </select>
+            <select 
+              name='sortDir' 
+              value={searchParams.sortDir} 
+              onChange={handleChange} 
+              className='ml-2 border p-2 rounded-md'
+            >
+              <option value='asc'>Ascending</option>
+              <option value='desc'>Descending</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      <div className='flex flex-wrap justify-center'>
+        {/* Tampilkan daftar buku */}
+        {books.map((book: Book) => (
+          <UserBookCard
+            key={book.id}
+            id={book.id}
+            judul={book.judul}
+            penulis={book.penulis}
+            harga={book.harga}
+            foto_cover={book.foto_cover}
+          />
+        ))}
       </div>
-      
-      {/* Tampilkan daftar buku */}
-      {books.map((book: Book) => (
-        <UserBookCard
-          key={book.id}
-          id={book.id}
-          judul={book.judul}
-          penulis={book.penulis}
-          deskripsi={book.deskripsi}
-          foto_cover={book.foto_cover}
-        />
-      ))}
     </div>
   );
 };
