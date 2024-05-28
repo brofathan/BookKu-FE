@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-inner-shadow {
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, .5);
+}
+
+.shadow {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Adjust the values as needed */
+  }
+
+  .custom-inner-shadow-input {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, .5);
+}
+
+  
