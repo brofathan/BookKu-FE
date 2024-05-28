@@ -77,7 +77,7 @@ const BookDetail = () => {
 
     if (!book) return;
 
-    const cartEndpoint = `http://34.101.88.254/carts/${userData.cartId}/products`;
+    const cartEndpoint = `http://34.101.88.254/carts/0/products`;
     const bookData = {
       tokenBuku: book.id,
       productName: book.judul,
@@ -98,13 +98,12 @@ const BookDetail = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className='m-8 p-20'>
+    <div className='flex justify-center items-center flex-col m-8 p-20'>
       {book && (
         <>
           <h1 className='text-3xl'>{book.judul}</h1>
           <div className='text-lg'>{book.penulis}</div>
-          <p className='mt-4'>{book.deskripsi}</p>
-          <img src={book.foto_cover} alt={book.judul} />
+          <img src={book.foto_cover} alt={book.judul} className='rounded-lg mt-4' />
           <p className='mt-2'>Penerbit: {book.penerbit}</p>
           <p className='mt-2'>Harga: {book.harga}</p>
           <p className='mt-2'>Stok: {book.stok}</p>
@@ -112,6 +111,7 @@ const BookDetail = () => {
           <p className='mt-2'>ISBN: {book.isbn}</p>
           <p className='mt-2'>Jumlah Halaman: {book.jumlah_halaman}</p>
           <p className='mt-2'>Kategori: {book.kategori}</p>
+          <p className='mt-4'>{book.deskripsi}</p>
           <button
             onClick={handleAddToCart}
             className='mt-4 p-2 bg-blue-500 text-white rounded'
