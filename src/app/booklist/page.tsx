@@ -1,7 +1,10 @@
 'use client';
 
+// import Authservice from '../misc/Authservice';
+// import '../misc/loading.css';
 import React, { useEffect, useState } from 'react';
 import UserBookCard, { Book } from '@/components/booklist/UserBookCard';
+import { FaFilter } from 'react-icons/fa'; // Mengimpor ikon filter dari react-icons
 
 const getAllBooks = async (keyword = '', filterBy = '', sortBy = '', sortDir = '') => {
   const response = await fetch(`http://34.87.170.153/book/list?keyword=${keyword}&filter-by=${filterBy}&sort-by=${sortBy}&sort-dir=${sortDir}`, {
@@ -27,10 +30,13 @@ const fetchBooks = async (keyword: string, filterBy: string, sortBy: string, sor
   }
 };
 
+// const [loading, setLoading] = useState(true);
+
 const Page = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showFilter, setShowFilter] = useState(false); // State untuk mengatur tampilan filter
   const [searchParams, setSearchParams] = useState({
     keyword: '',
     filterBy: '',
@@ -74,6 +80,14 @@ const Page = () => {
 
   // Effect untuk memuat data buku ketika nilai sort berubah
   useEffect(() => {
+    // const authorizeUser = async () => {
+    //   try {
+    //     await Authservice.authorize('user');
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+    // authorizeUser();
     fetchBooks(); // Panggil fetchBooks setiap kali nilai sort berubah
   }, [searchParams.sortBy, searchParams.sortDir]);
 
@@ -84,19 +98,31 @@ const Page = () => {
 
   // Render komponen Page
   return (
-    <div className='flex flex-col'>
-      <form onSubmit={handleSubmit} className='mb-4'>
-        {/* Input pencarian */}
-        <input 
-          type='text' 
-          name='keyword'
-          value={searchParams.keyword} 
-          onChange={handleChange} 
-          placeholder='Search for books' 
-          className='border p-2 rounded'
-        />
+    <div className='flex flex-col p-20'>
+    <form onSubmit={handleSubmit} className='mb-4 flex items-center'>
+      {/* Input pencarian */}
+      <input 
+        type='text' 
+        name='keyword'
+        value={searchParams.keyword} 
+        onChange={handleChange} 
+        placeholder='Search for books' 
+        className='border p-2 rounded-l'
+      />
+      {/* Tombol filter */}
+      <button 
+        type='button' 
+        onClick={() => setShowFilter(!showFilter)} 
+        className='p-2 bg-gray-200 rounded-r border-l'
+      >
+        <FaFilter />
+      </button>
+      <button type='submit' className='ml-2 p-2 bg-blue-500 text-white rounded'>Search</button>
+    </form>
 
-        {/* Filter by */}
+    {/* Menampilkan filter jika showFilter bernilai true */}
+    {showFilter && (
+      <div className='mb-4'>
         <label className='mr-2'>Filter by:</label>
         <select 
           name='filterBy' 
@@ -109,33 +135,32 @@ const Page = () => {
           <option value='penulis'>Penulis</option>
         </select>
 
-        <button type='submit' className='ml-2 p-2 bg-blue-500 text-white rounded'>Search</button>
-      </form>
-      
-      {/* Sort by */}
-      <div className='mb-4'>
-        <label className='mr-2'>Sort by:</label>
-        <select 
-          name='sortBy' 
-          value={searchParams.sortBy} 
-          onChange={handleChange} 
-          className='border p-2 rounded'
-        >
-          <option value='tanggal_terbit'>Tanggal Terbit</option>
-          <option value='buy_count'>Popularitas</option>
-          <option value='harga'>Harga</option>
-        </select>
-        <select 
-          name='sortDir' 
-          value={searchParams.sortDir} 
-          onChange={handleChange} 
-          className='ml-2 border p-2 rounded'
-        >
-          <option value='asc'>Ascending</option>
-          <option value='desc'>Descending</option>
-        </select>
+        <div className='mt-4'>
+          <label className='mr-2'>Sort by:</label>
+          <select 
+            name='sortBy' 
+            value={searchParams.sortBy} 
+            onChange={handleChange} 
+            className='border p-2 rounded'
+          >
+            <option value='tanggal_terbit'>Tanggal Terbit</option>
+            <option value='buy_count'>Popularitas</option>
+            <option value='harga'>Harga</option>
+          </select>
+          <select 
+            name='sortDir' 
+            value={searchParams.sortDir} 
+            onChange={handleChange} 
+            className='ml-2 border p-2 rounded'
+          >
+            <option value='asc'>Ascending</option>
+            <option value='desc'>Descending</option>
+          </select>
+        </div>
       </div>
-      
+    )}
+
+    <div className='flex flex-wrap'>
       {/* Tampilkan daftar buku */}
       {books.map((book: Book) => (
         <UserBookCard
@@ -143,12 +168,13 @@ const Page = () => {
           id={book.id}
           judul={book.judul}
           penulis={book.penulis}
-          deskripsi={book.deskripsi}
+          harga={book.harga}
           foto_cover={book.foto_cover}
         />
       ))}
     </div>
-  );
+  </div>
+);
 };
 
 export default Page;

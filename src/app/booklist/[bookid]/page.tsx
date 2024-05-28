@@ -1,5 +1,7 @@
 'use client'
 
+// import Authservice from 'BookKu-FE/src/app/misc/Authservice';
+// import '../misc/loading.css';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
@@ -20,28 +22,36 @@ type Book = {
 
 const BookDetail = () => {
   const [book, setBook] = useState<Book | null>(null);
-  const [userData, setUserData] = useState<{ cartId: number, historyId: number } | null>(null);
+  // const [userData, setUserData] = useState<{ cartId: number, historyId: number } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const authHeaders = {
-    'Content-Type': 'application/json',
-    'X-API-KEY': 'KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd',
-    'Authorization': typeof window !== 'undefined' ? `${localStorage.getItem('accessToken')}` : '',
-  };
+  // const authHeaders = {
+  //   'Content-Type': 'application/json',
+  //   'X-API-KEY': 'KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd',
+  //   'Authorization': typeof window !== 'undefined' ? `${localStorage.getItem('accessToken')}` : '',
+  // };
 
-  const fetchUserData = async () => {
-    try {
-      console.log('Auth Headers:', authHeaders);
-      const response = await axios.get('http://34.66.73.124/account/get-account', { headers: authHeaders });
-      setUserData({ cartId: response.data.cartId, historyId: response.data.historyId });
-    } 
-    catch (error) {
-        console.error('Error fetching user data:', error);
-    }
-  };
+  // const fetchUserData = async () => {
+  //   try {
+  //     console.log('Auth Headers:', authHeaders);
+  //     const response = await axios.get('http://34.66.73.124/account/get-account', { headers: authHeaders });
+  //     setUserData({ cartId: response.data.cartId, historyId: response.data.historyId });
+  //   } 
+  //   catch (error) {
+  //       console.error('Error fetching user data:', error);
+  //   }
+  // };
 
   useEffect(() => {
+    // const authorizeUser = async () => {
+    //   try {
+    //     await Authservice.authorize('user');
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+
     const fetchBook = async () => {
       const id = window.location.pathname.split('/').pop(); // Mendapatkan id dari URL
       try {
@@ -57,14 +67,15 @@ const BookDetail = () => {
         setLoading(false);
       }
     };
-    fetchUserData();
+    // fetchUserData();
+    // authorizeUser();
     fetchBook();
   }, []);
 
   const handleAddToCart = async () => {
     // console.log(userData?.cartId);
 
-    if (!userData || !book) return;
+    if (!book) return;
 
     const cartEndpoint = `http://34.101.88.254/carts/${userData.cartId}/products`;
     const bookData = {
@@ -87,7 +98,7 @@ const BookDetail = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className='m-8'>
+    <div className='m-8 p-20'>
       {book && (
         <>
           <h1 className='text-3xl'>{book.judul}</h1>
