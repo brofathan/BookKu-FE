@@ -20,7 +20,7 @@ const getAllBooks = async () => {
   return response.json();
 };
 
-export default function page() {
+export default function Dashboard() {
   const router = useRouter();
   const [isModal, setIsModal] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
@@ -45,7 +45,8 @@ export default function page() {
   const [loading, setLoading] = useState(true);
 
   // useEffect(() => {
-  //   fetchData();
+  //   fetchBookData();
+  //   fetchAccountData();
   // }, []);
 
   const fetchBookData = async () => {
@@ -71,10 +72,10 @@ export default function page() {
       }
     };
 
-    authorizeUser();
-
     fetchBookData();
     fetchAccountData();
+
+    authorizeUser();
   }, []);
 
   if (loading) {
@@ -85,10 +86,16 @@ export default function page() {
     );
   }
   // AUTHORIZATION //
+
   const refresh = () => {
     fetchBookData();
     fetchAccountData();
   };
+
+  // useEffect(() => {
+  //   fetchBookData();
+  //   fetchAccountData();
+  // }, []);
 
   const handleModal = (id: string) => {
     getBook(id);

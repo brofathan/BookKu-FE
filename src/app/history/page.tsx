@@ -35,7 +35,7 @@ const History: FC = () => {
     const authHeaders = {
         'Content-Type': 'application/json',
         'X-API-KEY': 'KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd',
-        'Authorization': `${localStorage.getItem('accessToken')}`,
+        'Authorization': typeof window !== 'undefined' ? `${localStorage.getItem('accessToken')}` : '',
     };
 
     const fetchUserData = async () => {
