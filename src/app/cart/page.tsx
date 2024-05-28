@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { FaShoppingCart } from 'react-icons/fa';
 import { AiFillDelete } from 'react-icons/ai';
 import { NextPage } from 'next';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 interface Product {
     productId: number;
@@ -49,18 +50,13 @@ const CartPage: NextPage = () => {
     const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
     const [discount, setDiscount] = useState(0);
     const [isCouponApplied, setIsCouponApplied] = useState(false);
-    const [formData, setFormData] = useState({
-        productName: '',
-        price: 0,
-        imageUrl: ''
-    });
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [userData, setUserData] = useState<{ cartId: number, historyId: number } | null>(null);
 
     const authHeaders = {
         'Content-Type': 'application/json',
         'X-API-KEY': 'KNziwqdninINDidwqdji192j9e1cmkasdnaksdnii932niNINi39rnd',
-        'Authorization': `${localStorage.getItem('accessToken')}`,
+        'Authorization': typeof window !== 'undefined' ? `${localStorage.getItem('accessToken')}` : '',
     };
 
     const fetchUserData = async () => {
@@ -73,19 +69,11 @@ const CartPage: NextPage = () => {
     };
 
     const fetchCartData = async (cartId: number) => {
+        console.log(userData)
+        console.log("^^^cek")
         try {
             const response = await axios.get<Cart>(`http://34.101.88.254/carts/${cartId}`, { headers: authHeaders });
-            if (!response.data) {
-                await axios.post('http://34.101.88.254/carts', {
-                    cartId: cartId,
-                    products: [],
-                    totalPrice: 0.0
-                }, { headers: authHeaders });
-                const newCartResponse = await axios.get<Cart>(`http://34.101.88.254/carts/${cartId}`, { headers: authHeaders });
-                setCart(newCartResponse.data);
-            } else {
-                setCart(response.data);
-            }
+            setCart(response.data);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching cart:', error);
@@ -152,7 +140,8 @@ const CartPage: NextPage = () => {
             const productData: Array<object> = cart.products.map(product => ({
                 productName: product.productName,
                 price: product.price,
-                imageUrl: product.imageUrl
+                imageUrl: product.imageUrl,
+                tokenBuku: product.tokenBuku
             }));
 
             await axios.post(`http://34.101.88.254/histories/${userData.historyId}/add-cart`, {
@@ -189,28 +178,6 @@ const CartPage: NextPage = () => {
             updatePriceWithDiscount(updatedCart, selectedCoupon); // Update price with discount
         } catch (error) {
             console.error('Error deleting product:', error);
-        }
-    };
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleAddProduct = async () => {
-        try {
-            if (!userData) {
-                console.error('User data not available');
-                return;
-            }
-            await axios.post(`http://34.101.88.254/carts/${userData.cartId}/products`, { ...formData }, { headers: authHeaders });
-            const response = await axios.get<Cart>(`http://34.101.88.254/carts/${userData.cartId}`, { headers: authHeaders });
-            const totalPrice = response.data.products.reduce((total, product) => total + product.price, 0);
-            const updatedCart = { ...response.data, totalPrice };
-            setCart(updatedCart);
-            setFormData({ productName: '', price: 0, imageUrl: '' });
-            updatePriceWithDiscount(updatedCart, selectedCoupon); // Update price with discount
-        } catch (error) {
-            console.error('Error adding product:', error);
         }
     };
 
@@ -288,14 +255,16 @@ const CartPage: NextPage = () => {
                 <meta name="description" content="Your Shopping Cart" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
+            <div className="p-20 min-h-screen bg-gradient-to-r from-blue-100 to-blue-200 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-3xl w-full space-y-8">
                     <div className="flex items-center space-x-4">
-                        <FaShoppingCart className="text-4xl text-blue-600" />
+                        <FaShoppingCart className="text-4xl text-blue-600 animate-bounce" />
                         <h1 className="text-3xl font-extrabold text-gray-900">Shopping Cart</h1>
                     </div>
                     {loading ? (
-                        <p className="text-lg text-gray-700">Loading...</p>
+                        <div className="flex justify-center items-center h-40">
+                            <ClipLoader color="#1E40AF" size={50} />
+                        </div>
                     ) : (
                         <>
                             {cart === null || !cart.products.length ? (
@@ -318,15 +287,15 @@ const CartPage: NextPage = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => handleDeleteProduct(product.productId)}
-                                                    className="text-red-600 hover:text-red-800"
+                                                    className="text-red-600 hover:text-red-800 transition duration-300 ease-in-out transform hover:scale-105"
                                                 >
                                                     <AiFillDelete className="text-2xl" />
                                                 </button>
                                             </li>
                                         ))}
                                     </ul>
-                                    <div className="mt-8 flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
-                                        <div>
+                                    <div className="mt-8 flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-lg shadow-md">
+                                        <div className="flex flex-col space-y-2">
                                             <p className="text-2xl font-semibold text-gray-900">Total Price: {formatRupiah(cart.totalPrice)}</p>
                                             {isCouponApplied && ( // Display the discount only if a coupon is applied
                                                 <div className="flex items-center space-x-4">
@@ -342,7 +311,7 @@ const CartPage: NextPage = () => {
                                         </div>
                                         <button
                                             onClick={handleCheckout}
-                                            className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded transition duration-300 ease-in-out transform hover:scale-105"
+                                            className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded mt-4 sm:mt-0 transition duration-300 ease-in-out transform hover:scale-105"
                                         >
                                             Checkout
                                         </button>
@@ -352,51 +321,16 @@ const CartPage: NextPage = () => {
                         </>
                     )}
                     <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
-                        <h2 className="text-xl font-semibold text-gray-900">Add Product (dummy for now)</h2>
-                        <div className="flex flex-col mt-4">
-                            <input
-                                type="text"
-                                placeholder="Product Name"
-                                className="border border-gray-300 rounded-md p-2 mb-2"
-                                name="productName"
-                                value={formData.productName}
-                                onChange={handleChange}
-                            />
-                            <input
-                                type="number"
-                                placeholder="Price"
-                                className="border border-gray-300 rounded-md p-2"
-                                name="price"
-                                value={formData.price.toString()}
-                                onChange={handleChange}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Image URL"
-                                className="border border-gray-300 rounded-md p-2"
-                                name="imageUrl"
-                                value={formData.imageUrl}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <button
-                            onClick={handleAddProduct}
-                            className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded mt-4 transition duration-300 ease-in-out transform hover:scale-105"
-                        >
-                            Add Product
-                        </button>
-                    </div>
-                    <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
                         <h2 className="text-xl font-semibold text-gray-900">Available Coupons</h2>
                         <div className="relative">
                             <button
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                                className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105"
+                                className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mt-2 transition duration-300 ease-in-out transform hover:scale-105"
                             >
                                 {dropdownOpen ? 'Hide Coupons' : 'Show Coupons'}
                             </button>
                             {dropdownOpen && (
-                                <ul className="absolute mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg divide-y divide-gray-200 z-10">
+                                <ul className="absolute mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg divide-y divide-gray-200 z-10 animate-fadeIn">
                                     {coupons.length > 0 ? (
                                         coupons.map((coupon) => (
                                             <li key={coupon.id}
@@ -414,6 +348,19 @@ const CartPage: NextPage = () => {
                     </div>
                 </div>
             </div>
+            <style jsx global>{`
+                .animate-fadeIn {
+                    animation: fadeIn 0.5s ease-in-out;
+                }
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+            `}</style>
         </>
     );
 };
